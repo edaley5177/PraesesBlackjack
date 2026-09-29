@@ -95,20 +95,25 @@ public class Main {
             if(dealer.isBust()){
                 if(currPlayer.isBust()){
                     System.out.println("Player: " + currPlayer.getName() + LOOSE);
+                    continue;
                 }
                 else {
                     System.out.println("Player: " + currPlayer.getName() + WIN);
+                    continue;
                 }
 
             }
             if(currPlayer.isBust() || currPlayer.getHandValue()<dealer.getHandValue()){
                 System.out.println("Player: " + currPlayer.getName() + LOOSE);
+                continue;
             }
             if (currPlayer.getHandValue()== dealer.getHandValue()){
                 System.out.println("Player: " + currPlayer.getName() + PUSH);
+                continue;
             }
             if(currPlayer.getHandValue() > dealer.getHandValue()){
                 System.out.println("Player: " + currPlayer.getName() + WIN);
+                continue;
             }
         }
     }
