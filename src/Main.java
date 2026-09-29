@@ -6,8 +6,10 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     public static void main(String[] args) {
 
+        int numberOfPlayers;
         Scanner scanner = new Scanner(System.in);
 
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
@@ -15,6 +17,12 @@ public class Main {
         System.out.println("Hello and welcome to blackjack! How many decks do you want to play with? ");
 
         int numberOfDecks = scanner.nextInt();
+
+        System.out.println("How many bot players do you want?");
+        int numberOfBots = scanner.nextInt();
+        int numberOfUsers =0;
+
+        numberOfPlayers = 1+numberOfBots+numberOfUsers;
 
         Deck deck1 = new Deck();
 
@@ -27,5 +35,9 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    public void dealFirstCards(int numberOfPlayers){
+
     }
 }
