@@ -1,11 +1,19 @@
-import Card.Deck;
-import Card.Shoe;
+import Card.*;
 
+import Players.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+    public static Shoe mainShoe;
+    public static List<Player> allPlayers;
+    public static DealerPlayer dealer;
+    public static String DEALERBJ = "Dealer has black jack everyone looses :(";
+    public static String NOBJ = "Dealer does not have blackjack!!!";
 
     public static void main(String[] args) {
 
@@ -27,17 +35,99 @@ public class Main {
         Deck deck1 = new Deck();
 
 
-        Shoe mainShoe = new Shoe(numberOfDecks);
-        for (int i = 0; i <= numberOfDecks*52; i++) {
+        mainShoe = new Shoe(numberOfDecks);
+        mainShoe.shuffle();
+        mainShoe.shuffle();
+
+        allPlayers = makeAllPlayers(numberOfBots, numberOfUsers);
+
+        dealFirstCards(allPlayers);
+        printAllHands();
+
+        //if dealer has BJ print message
+
+        if(allPlayers.getLast().getHandValue() ==21){
+            System.out.println(DEALERBJ);
+            return;
+        }
+        System.out.println(NOBJ);
+        Card dealerUpCard = dealer.getHand().get(1);
+
+        //dealer does not have BJ so loop through all players, let each play hand
+        //just player actions in this loop, dealer will be separate
+        for (int i = 0; i < allPlayers.size()-1; i++) {
+            Player currPlayer = allPlayers.get(i);
+            Action nextAction= currPlayer.makeDecision(dealerUpCard);
+            if(nextAction == Action.HIT){
+                currPlayer.hit(mainShoe);
+            }
+            if (nextAction == Action.STAND){
+                continue;
+            }
+        }
+
+        while(!dealer.isBust() && dealer.getHandValue()<17){
+            Action nextAction = dealer.makeDecision(dealerUpCard);
+            System.out.println("currdealervalue: " + dealer.getHandValue());
+            if(nextAction == Action.HIT){
+                dealer.hit(mainShoe);
+            }
+            if (nextAction == Action.STAND){
+                continue;
+            }
+
+        }
+        printAllHands();
+
+        /*for (int i = 0; i <= numberOfDecks*52; i++) {
             //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
             // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
             System.out.println("current card = " + mainShoe.drawCard().toString());
-        }
+        }*/
 
         scanner.close();
     }
+    public static List<Player> makeAllPlayers(int bots, int users){
+       allPlayers = new ArrayList<Player>();
 
-    public void dealFirstCards(int numberOfPlayers){
+        for (int i = 0; i < bots; i++) {
+            allPlayers.add(new BotPlayer("bot" + i));
+        }
 
+        allPlayers.add(new DealerPlayer());
+
+        /*for (int i = 0; i < users; i++) {
+            allPlayers.add(new UserPlayer("user" + i));
+        }*/
+        return allPlayers;
+    }
+
+    public static void dealFirstCards(List<Player> allPlayers){
+        dealer = (DealerPlayer) allPlayers.getLast();
+        int currPlayerIndex = 0;
+        while(dealer.getHand().size()<2){
+            //deal to dealer player
+            if(currPlayerIndex==allPlayers.size()-1){
+                dealer.addCard(mainShoe.drawCard());
+            }
+            else {
+                Player currPlayer = allPlayers.get(currPlayerIndex);
+                currPlayer.addCard(mainShoe.drawCard());
+            }
+
+            if(currPlayerIndex >=allPlayers.size()-1){
+                currPlayerIndex=0;
+            }
+            else {
+                currPlayerIndex++;
+            }
+        }
+
+    }
+
+    public static void printAllHands(){
+        for (int i = 0; i < allPlayers.size(); i++) {
+            System.out.println("Player: " + allPlayers.get(i).getName()+" hand: " + allPlayers.get(i).getHand());
+        }
     }
 }

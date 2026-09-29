@@ -37,15 +37,17 @@ public class Card {
                 return 8;
             case "9":
                 return 9;
-            case "10", "Jack", "Queen", "King":
+            case "10", "J", "Q", "K":
                 return 10;
-            case "Ace":
+            case "A":
+                return 11;
 
 
         }
+        return -1;
     }
 
     public boolean isAce(){
-        return value.equals("Ace");
+        return value.equals("A");
     }
 }

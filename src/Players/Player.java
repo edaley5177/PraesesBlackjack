@@ -26,6 +26,11 @@ public abstract class Player {
         return hand;
     }
 
+    public List<Card> hit(Shoe shoe){
+        addCard(shoe.drawCard());
+        return getHand();
+    }
+
     public String getName() {
         return name;
     }
