@@ -14,6 +14,9 @@ public class Main {
     public static DealerPlayer dealer;
     public static String DEALERBJ = "Dealer has black jack everyone looses :(";
     public static String NOBJ = "Dealer does not have blackjack!!!";
+    public static String WIN = "Win!!!";
+    public static String LOOSE = "Lost:(";
+    public static String PUSH = "Push :O";
 
     public static void main(String[] args) {
 
@@ -79,14 +82,37 @@ public class Main {
         }
         printAllHands();
 
-        /*for (int i = 0; i <= numberOfDecks*52; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("current card = " + mainShoe.drawCard().toString());
-        }*/
+        //after all players including dealer are done, loop all nondealer players and print win loose or push
+        printPlayersResults();
+
 
         scanner.close();
     }
+
+    private static void printPlayersResults() {
+        for (int i = 0; i < allPlayers.size()-1; i++) {
+            Player currPlayer = allPlayers.get(i);
+            if(dealer.isBust()){
+                if(currPlayer.isBust()){
+                    System.out.println("Player: " + currPlayer.getName() + LOOSE);
+                }
+                else {
+                    System.out.println("Player: " + currPlayer.getName() + WIN);
+                }
+
+            }
+            if(currPlayer.isBust() || currPlayer.getHandValue()<dealer.getHandValue()){
+                System.out.println("Player: " + currPlayer.getName() + LOOSE);
+            }
+            if (currPlayer.getHandValue()== dealer.getHandValue()){
+                System.out.println("Player: " + currPlayer.getName() + PUSH);
+            }
+            if(currPlayer.getHandValue() > dealer.getHandValue()){
+                System.out.println("Player: " + currPlayer.getName() + WIN);
+            }
+        }
+    }
+
     public static List<Player> makeAllPlayers(int bots, int users){
        allPlayers = new ArrayList<Player>();
 
