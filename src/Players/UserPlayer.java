@@ -27,7 +27,9 @@ public class UserPlayer extends Player {
         }
     }
 
+    @Override
     public void bet(int betAmount){
+        totalBet = betAmount;
         if(betAmount > bankRoll){
             System.out.println("Player: " + getName() + " has bet too much");
             return;

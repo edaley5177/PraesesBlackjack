@@ -28,12 +28,16 @@ public class BotPlayer extends Player {
         return Action.HIT;
     }
 
+    @Override
     public void bet(int betAmount){
+        totalBet = betAmount;
         if(betAmount > bankRoll){
             System.out.println("Player: " + getName() + " has bet too much");
             return;
         }
+
         bankRoll-= betAmount;
+        System.out.println(getName() + " has bet " + betAmount + " remaining bankroll is: " + bankRoll);
 
     }
 }

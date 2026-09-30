@@ -2,6 +2,8 @@ package Players;
 
 import Card.Card;
 
+import java.util.List;
+
 public class DealerPlayer extends Player {
 
     public DealerPlayer() {
@@ -16,5 +18,11 @@ public class DealerPlayer extends Player {
         }
         return Action.STAND;
     }
+
+    @Override
+    public void bet(int betAmount){
+        //do nothing dealer does not bet
+    }
+
 
 }

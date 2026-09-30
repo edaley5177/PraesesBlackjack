@@ -12,11 +12,8 @@ public class BlackJackSimulator {
     public static Shoe mainShoe;
     public static List<Player> allPlayers;
     public static DealerPlayer dealer;
-    public static String DEALERBJ = "Dealer has black jack everyone looses :(";
     public static String NOBJ = "Dealer does not have blackjack!!!";
-    public static String WIN = "Win!!!";
-    public static String LOOSE = "Lost:(";
-    public static String PUSH = "Push :O";
+
 
     public static void main(String[] args) {
 
@@ -61,10 +58,17 @@ public class BlackJackSimulator {
         dealFirstCards(allPlayers);
         printAllHands();
 
-        //if dealer has BJ print message
 
-        if(allPlayers.getLast().getHandValue() ==21){
-            System.out.println(DEALERBJ);
+
+        Player house = allPlayers.getLast();
+
+        //test dealer has bj
+//        List<Card> dealerHand = new ArrayList<>();
+//        dealerHand.add(new Card("10", "Hearts"));
+//        dealerHand.add(new Card("A", "Clubs"));
+//        house.setHand(dealerHand);
+        if(house.hasBJ()){
+            printPlayersResults(true);
             return;
         }
         System.out.println(NOBJ);
@@ -83,7 +87,7 @@ public class BlackJackSimulator {
         printAllHands();
 
         //after all players including dealer are done, loop all nondealer players and print win loose or push
-        printPlayersResults();
+        printPlayersResults(false);
 
 
         scanner.close();
@@ -116,6 +120,8 @@ public class BlackJackSimulator {
     private static void playBotHands(Card dealerUpCard) {
         for (int i = 0; i < allPlayers.size()-1; i++) {
             Player currPlayer = allPlayers.get(i);
+
+
             Action nextAction= currPlayer.makeDecision(dealerUpCard);
             if(nextAction == Action.HIT){
                 currPlayer.hit(mainShoe);
@@ -126,30 +132,54 @@ public class BlackJackSimulator {
         }
     }
 
-    private static void printPlayersResults() {
+    private static void printPlayersResults(boolean dealerBJ) {
         for (int i = 0; i < allPlayers.size()-1; i++) {
             Player currPlayer = allPlayers.get(i);
+
+
+
+            if(dealerBJ){
+                if(currPlayer.hasBJ()){
+                    currPlayer.push();
+
+                }
+                else {
+                    currPlayer.loose(currPlayer.getBetAmount());
+                }
+                continue;
+            }
+
+
             if(dealer.isBust()){
                 if(currPlayer.isBust()){
-                    System.out.println("Player: " + currPlayer.getName() + LOOSE);
+                   currPlayer.loose(currPlayer.getBetAmount());
+
                     continue;
                 }
                 else {
-                    System.out.println("Player: " + currPlayer.getName() + WIN);
+                    if(currPlayer.hasBJ()){
+                        currPlayer.winBJ(currPlayer.getBetAmount());
+                        continue;
+                    }
+                    currPlayer.win(currPlayer.getBetAmount());
                     continue;
                 }
 
             }
             if(currPlayer.isBust() || currPlayer.getHandValue()<dealer.getHandValue()){
-                System.out.println("Player: " + currPlayer.getName() + LOOSE);
+                currPlayer.loose(currPlayer.getBetAmount());
                 continue;
             }
             if (currPlayer.getHandValue()== dealer.getHandValue()){
-                System.out.println("Player: " + currPlayer.getName() + PUSH);
+                currPlayer.push();
                 continue;
             }
             if(currPlayer.getHandValue() > dealer.getHandValue()){
-                System.out.println("Player: " + currPlayer.getName() + WIN);
+                if(currPlayer.hasBJ()){
+                    currPlayer.winBJ(currPlayer.getBetAmount());
+                    continue;
+                }
+                currPlayer.win(currPlayer.getBetAmount());
                 continue;
             }
         }
@@ -191,6 +221,7 @@ public class BlackJackSimulator {
             }
             else {
                 Player currPlayer = allPlayers.get(currPlayerIndex);
+                currPlayer.bet(5);
                 currPlayer.addCard(mainShoe.drawCard());
             }
 
