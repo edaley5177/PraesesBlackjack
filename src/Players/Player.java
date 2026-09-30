@@ -41,6 +41,11 @@ public abstract class Player {
         return getHand();
     }
 
+    public void doubleDown(Shoe shoe){
+        totalBet+= totalBet;
+        hit(shoe);
+    }
+
     public String getName() {
         return name;
     }
