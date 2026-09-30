@@ -39,8 +39,8 @@ public class BlackJackSimulator {
 
         int numberOfUsers=0;
         System.out.println("Would you like to add 1 user player?");
-        String user = scanner.next();
-        if(user.equals("yes") || user.equals("Yes"))
+        String user = scanner.next().toUpperCase();
+        if(user.startsWith("Y"))
              numberOfUsers =1;
 
 
@@ -97,8 +97,20 @@ public class BlackJackSimulator {
 
 
         Action nextAction = user.makeDecision(dealerUpCard);
+        if(nextAction == Action.STAND)
+            return;
+
+        if(nextAction == Action.DOUBLE){
+            user.doubleDown(mainShoe);
+            return;
+        }
+
         while(!nextAction.equals(Action.STAND) && !user.isBust()){
+            if(nextAction.equals(Action.HIT)){
+                user.hit(mainShoe);
+            }
             nextAction = user.makeDecision(dealerUpCard);
+
         }
 
     }
@@ -118,10 +130,8 @@ public class BlackJackSimulator {
     }
 
     private static void playBotHands(Card dealerUpCard) {
-        for (int i = 0; i < allPlayers.size()-1; i++) {
-            Player currPlayer = allPlayers.get(i);
-
-
+        for (int i = 0; i < allPlayers.size()-2; i++) {
+            BotPlayer currPlayer = (BotPlayer) allPlayers.get(i);
             Action nextAction= currPlayer.makeDecision(dealerUpCard);
             if(nextAction == Action.HIT){
                 currPlayer.hit(mainShoe);
@@ -203,6 +213,8 @@ public class BlackJackSimulator {
             System.out.println("What would you like the human players name to be?");
             String humanName = scan.nextLine();
             allPlayers.add(new UserPlayer(humanName, scan));
+            System.out.println("How much would" + humanName + " like to bet? (min: 5, max: 100)" );
+            allPlayers.getLast().bet(scan.nextInt());
         }
 
         allPlayers.add(new DealerPlayer());
