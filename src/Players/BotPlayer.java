@@ -3,8 +3,10 @@ import Card.*;
 
 public class BotPlayer extends Player {
 
+    int bankRoll;
     public BotPlayer(String name) {
         super(name);
+        bankRoll=100;
     }
 
     @Override
@@ -24,5 +26,14 @@ public class BotPlayer extends Player {
             return Action.STAND;
         }
         return Action.HIT;
+    }
+
+    public void bet(int betAmount){
+        if(betAmount > bankRoll){
+            System.out.println("Player: " + getName() + " has bet too much");
+            return;
+        }
+        bankRoll-= betAmount;
+
     }
 }

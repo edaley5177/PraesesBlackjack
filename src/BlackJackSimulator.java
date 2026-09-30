@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+public class BlackJackSimulator {
     public static Shoe mainShoe;
     public static List<Player> allPlayers;
     public static DealerPlayer dealer;
@@ -25,13 +25,27 @@ public class Main {
 
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-        System.out.println("Hello and welcome to blackjack! How many decks do you want to play with? ");
+        System.out.println("Hello and welcome to blackjack! How many decks do you want to play with? (Max:50) ");
 
         int numberOfDecks = scanner.nextInt();
+        if(numberOfDecks<=0 || numberOfDecks>=51){
+            System.out.println("You must enter an integer between 1 and 50");
+            return;
+        }
 
-        System.out.println("How many bot players do you want?");
+        System.out.println("How many bot players do you want?(Max: 30)");
         int numberOfBots = scanner.nextInt();
-        int numberOfUsers =0;
+        if(numberOfBots<0 || numberOfBots>30){
+            System.out.println("You must enter an integer between 1 and 30");
+            return;
+        }
+
+        int numberOfUsers=0;
+        System.out.println("Would you like to add 1 user player?");
+        String user = scanner.next();
+        if(user.equals("yes") || user.equals("Yes"))
+             numberOfUsers =1;
+
 
         numberOfPlayers = 1+numberOfBots+numberOfUsers;
 
@@ -58,17 +72,34 @@ public class Main {
 
         //dealer does not have BJ so loop through all players, let each play hand
         //just player actions in this loop, dealer will be separate
-        for (int i = 0; i < allPlayers.size()-1; i++) {
-            Player currPlayer = allPlayers.get(i);
-            Action nextAction= currPlayer.makeDecision(dealerUpCard);
-            if(nextAction == Action.HIT){
-                currPlayer.hit(mainShoe);
-            }
-            if (nextAction == Action.STAND){
-                continue;
-            }
+        playBotHands(dealerUpCard);
+
+        //play users
+        if(numberOfUsers==1)
+            playUserHand(dealerUpCard, (UserPlayer) allPlayers.get(allPlayers.size()-2));
+
+        //play dealers hand
+        playDealerHand(dealerUpCard);
+        printAllHands();
+
+        //after all players including dealer are done, loop all nondealer players and print win loose or push
+        printPlayersResults();
+
+
+        scanner.close();
+    }
+
+    private static void playUserHand(Card dealerUpCard, UserPlayer user){
+
+
+        Action nextAction = user.makeDecision(dealerUpCard);
+        while(!nextAction.equals(Action.STAND) && !user.isBust()){
+            nextAction = user.makeDecision(dealerUpCard);
         }
 
+    }
+
+    private static void playDealerHand(Card dealerUpCard) {
         while(!dealer.isBust() && dealer.getHandValue()<17){
             Action nextAction = dealer.makeDecision(dealerUpCard);
             System.out.println("currdealervalue: " + dealer.getHandValue());
@@ -80,13 +111,19 @@ public class Main {
             }
 
         }
-        printAllHands();
+    }
 
-        //after all players including dealer are done, loop all nondealer players and print win loose or push
-        printPlayersResults();
-
-
-        scanner.close();
+    private static void playBotHands(Card dealerUpCard) {
+        for (int i = 0; i < allPlayers.size()-1; i++) {
+            Player currPlayer = allPlayers.get(i);
+            Action nextAction= currPlayer.makeDecision(dealerUpCard);
+            if(nextAction == Action.HIT){
+                currPlayer.hit(mainShoe);
+            }
+            if (nextAction == Action.STAND){
+                continue;
+            }
+        }
     }
 
     private static void printPlayersResults() {
@@ -119,17 +156,28 @@ public class Main {
     }
 
     public static List<Player> makeAllPlayers(int bots, int users){
+
        allPlayers = new ArrayList<Player>();
 
+        //check for user errors first
+        if(bots <=0 || users<0){
+
+            return allPlayers;
+        }
         for (int i = 0; i < bots; i++) {
             allPlayers.add(new BotPlayer("bot" + i));
         }
 
+        if(users ==1){
+            Scanner scan = new Scanner(System.in);
+            System.out.println("What would you like the human players name to be?");
+            String humanName = scan.nextLine();
+            allPlayers.add(new UserPlayer(humanName, scan));
+        }
+
         allPlayers.add(new DealerPlayer());
 
-        /*for (int i = 0; i < users; i++) {
-            allPlayers.add(new UserPlayer("user" + i));
-        }*/
+
         return allPlayers;
     }
 
@@ -158,7 +206,7 @@ public class Main {
 
     public static void printAllHands(){
         for (int i = 0; i < allPlayers.size(); i++) {
-            System.out.println("Player: " + allPlayers.get(i).getName()+" hand: " + allPlayers.get(i).getHand());
+            System.out.println("Player: " + allPlayers.get(i).getName()+" hand: " + allPlayers.get(i).getHand() + " value: " + allPlayers.get(i).getHandValue());
         }
     }
 }
