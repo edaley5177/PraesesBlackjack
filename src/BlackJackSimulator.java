@@ -108,6 +108,10 @@ public class BlackJackSimulator {
         while(!nextAction.equals(Action.STAND) && !user.isBust()){
             if(nextAction.equals(Action.HIT)){
                 user.hit(mainShoe);
+                if(user.isBust()){
+                    System.out.println(user.getName() + "'s new hand is " + user.getHand() + " which is bust ");
+                    return;
+                }
             }
             nextAction = user.makeDecision(dealerUpCard);
 
@@ -213,8 +217,14 @@ public class BlackJackSimulator {
             System.out.println("What would you like the human players name to be?");
             String humanName = scan.nextLine();
             allPlayers.add(new UserPlayer(humanName, scan));
-            System.out.println("How much would" + humanName + " like to bet? (min: 5, max: 100)" );
-            allPlayers.getLast().bet(scan.nextInt());
+            System.out.println("How much would " + humanName + " like to bet? (min: 5, max: 100)" );
+            int userBet = scan.nextInt();
+            while(userBet<5 || userBet>100){
+                System.out.println("Invalid bet, you can only bet an integer amount from 5 to 100.");
+                System.out.println("How much would " + humanName + " like to bet? (min: 5, max: 100)" );
+                userBet = scan.nextInt();
+            }
+            allPlayers.getLast().bet(userBet);
         }
 
         allPlayers.add(new DealerPlayer());
