@@ -38,8 +38,6 @@ public class BlackJackSimulator {
             return;
         }
 
-
-
         mainShoe = new Shoe(numberOfDecks);
         mainShoe.shuffle();
         mainShoe.shuffle();
@@ -51,7 +49,6 @@ public class BlackJackSimulator {
 
         dealer = (DealerPlayer) allPlayers.getLast();
 
-        // Check if dealer has natural Blackjack
         Hand dealerHand = dealer.getHands().get(0);
         if (dealerHand.hasBJ()) {
             printPlayersResults(true);
@@ -61,20 +58,15 @@ public class BlackJackSimulator {
         System.out.println(NOBJ);
         dealerUpCard = dealerHand.getCards().get(1);
 
-        // Play bot turns
         playBotHands(dealerUpCard);
 
-        // Play human turn
-        if (numberOfUsers == 1) {
-
+        if (numberOfUsers == 1)
             playUserTurn(human, dealerUpCard, scanner);
-        }
 
-        // Play dealer turn
+
         playDealerHand(dealerUpCard);
         printAllHands();
 
-        // Settle all hands
         printPlayersResults(false);
 
         scanner.close();
@@ -83,7 +75,7 @@ public class BlackJackSimulator {
     private static void playUserTurn(UserPlayer user, Card dealerUpCard, Scanner scanner) {
         Hand initialHand = user.getHands().get(0);
 
-        // Prompt for Split if initial 2-card pair and player has enough chips
+        // Prompt for split if initial 2-card pair and player has enough chips
         if (initialHand.canSplit() && user.getChips() >= initialHand.getBet()) {
             printDealerHand();
             System.out.println("Hand: " + initialHand.getCards() + " | Value: " + initialHand.getHandValue());
@@ -94,7 +86,7 @@ public class BlackJackSimulator {
             }
         }
 
-        // Play each hand (1 hand if not split, 2 hands if split)
+        // Play each hand
         for (int i = 0; i < user.getHands().size(); i++) {
             Hand currentHand = user.getHands().get(i);
 
@@ -112,15 +104,15 @@ public class BlackJackSimulator {
         Hand secondHand = new Hand(initialHand.getBet());
         secondHand.setBet(initialHand.getBet());
 
-        // Remove 2nd card from hand 1 and add to hand 2
+
         Card splitCard = initialHand.getCards().remove(1);
         secondHand.addCard(splitCard);
 
-        // Deal 1 new card from Shoe to each hand
+
         initialHand.addCard(mainShoe.drawCard());
         secondHand.addCard(mainShoe.drawCard());
 
-        // Register second hand to player
+
         user.getHands().add(secondHand);
         System.out.println("Hand split successfully into 2 active hands!");
     }
@@ -140,7 +132,6 @@ public class BlackJackSimulator {
                 break;
             }
 
-            // Delegate decision input to the UserPlayer
             Action action = user.makeDecision(dealerUpCard);
 
             if (action == Action.DOUBLE) {
@@ -152,7 +143,7 @@ public class BlackJackSimulator {
                     if (hand.isBust()) {
                         System.out.println("Hand busted!");
                     }
-                    break; // Double down gets exactly 1 card then hand ends
+                    break;
                 } else {
                     System.out.println("Cannot double down right now.");
                 }
@@ -160,11 +151,11 @@ public class BlackJackSimulator {
                 hand.addCard(mainShoe.drawCard());
                 firstAction = false;
             } else if (action == Action.STAND) {
-                break; // Stand
+                break;
             } else if (action == Action.SPLIT) {
                 if (hand.canSplit() && user.getChips() >= hand.getBet()) {
                     executeSplit(user, hand);
-                    break; // After splitting current hand state changes
+                    break;
                 } else {
                     System.out.println("Cannot split this hand.");
                 }
@@ -198,11 +189,11 @@ public class BlackJackSimulator {
         Hand dealerHand = dealer.getHands().get(0);
         int dealerValue = dealerHand.getHandValue();
 
-        // Loop all players except Dealer
+
         for (int i = 0; i < allPlayers.size() - 1; i++) {
             Player player = allPlayers.get(i);
 
-            // Iterate over every active hand (1 or 2 hands if split)
+
             for (int h = 0; h < player.getHands().size(); h++) {
                 Hand hand = player.getHands().get(h);
                 int handValue = hand.getHandValue();
@@ -233,7 +224,7 @@ public class BlackJackSimulator {
                     player.loose(bet);
                 } else if (handValue == dealerValue) {
                     player.push();
-                } else { // handValue > dealerValue
+                } else {
                     if (hand.hasBJ()) {
                         player.winBJ(bet);
                     } else {
@@ -249,7 +240,7 @@ public class BlackJackSimulator {
 
         for (int i = 0; i < bots; i++) {
             BotPlayer bot = new BotPlayer("bot" + i);
-            bot.getHands().add(new Hand(5)); // Hand initialized with bet 5
+            bot.getHands().add(new Hand(5));
             allPlayers.add(bot);
         }
 
@@ -281,7 +272,6 @@ public class BlackJackSimulator {
     public static void dealFirstCards(List<Player> allPlayers) {
         dealer = (DealerPlayer) allPlayers.getLast();
 
-        // Deal 2 cards to each player's initial hand
         for (int round = 0; round < 2; round++) {
             for (Player p : allPlayers) {
                 p.getHands().get(0).addCard(mainShoe.drawCard());
@@ -306,7 +296,7 @@ public class BlackJackSimulator {
     public static int calculateMaxBots(int numberOfDecks, int numberOfUsers) {
         int totalCards = numberOfDecks * 52;
         int maxDealerCards = 6;
-        int maxCardsPerPlayer = 12; // 2 hands max * 6 cards per hand
+        int maxCardsPerPlayer = 12;
 
         int cardsForBots = totalCards - maxDealerCards - (numberOfUsers * maxCardsPerPlayer);
 
@@ -314,7 +304,7 @@ public class BlackJackSimulator {
             return 0;
         }
 
-        // Direct division allows as many bots as the deck count can mathematically support
+
         return cardsForBots / maxCardsPerPlayer;
     }
 }

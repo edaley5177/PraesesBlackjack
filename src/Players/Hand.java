@@ -16,25 +16,9 @@ public class Hand {
     }
 
     public boolean canSplit() {
-        // Must have exactly two cards of matching rank (or matching value, depending on rules)
         return cards.size() == 2 &&
                 cards.get(0).getValue() == cards.get(1).getValue();
     }
-
-    /*public Hand split(Shoe shoe) {
-        Card splitCard = cards.remove(1); // Remove the second card
-        Hand newHand = new Hand();
-        newHand.setBet(this.bet);
-        newHand.addCard(splitCard);
-        //newHand.setSplitHand(true);
-        this.isSplitHand = true;
-
-        // Deal one card to each hand to make them two-card hands again
-        this.addCard(shoe.drawCard());
-        //newHand.addCard(deck.draw());
-
-        return newHand;
-    }*/
 
     public int getBet(){
         return bet;

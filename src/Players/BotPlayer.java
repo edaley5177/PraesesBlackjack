@@ -14,14 +14,14 @@ public class BotPlayer extends Player {
         int playerTotal = super.getHands().get(0).getHandValue();
         int dealerValue = dealerUpCard.getNumericValue();
 
-        // Example Basic Strategy logic:
+
         if (playerTotal >= 17) {
             return Action.STAND;
         }
         if (playerTotal <= 11) {
             return Action.HIT;
         }
-        // Total is 12–16: Stand if dealer shows 2–6, otherwise Hit
+
         if (dealerValue >= 2 && dealerValue <= 6) {
             return Action.STAND;
         }
