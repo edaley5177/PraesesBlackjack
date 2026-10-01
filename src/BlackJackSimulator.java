@@ -209,7 +209,9 @@ public class BlackJackSimulator {
             return allPlayers;
         }
         for (int i = 0; i < bots; i++) {
-            allPlayers.add(new BotPlayer("bot" + i));
+            BotPlayer boti = new BotPlayer("bot" + i);
+            allPlayers.add(boti);
+            boti.bet(5);
         }
 
         if(users ==1){
@@ -243,7 +245,6 @@ public class BlackJackSimulator {
             }
             else {
                 Player currPlayer = allPlayers.get(currPlayerIndex);
-                currPlayer.bet(5);
                 currPlayer.addCard(mainShoe.drawCard());
             }
 
