@@ -11,7 +11,7 @@ public class BotPlayer extends Player {
 
     @Override
     public Action makeDecision(Card dealerUpCard) {
-        int playerTotal = getHandValue();
+        int playerTotal = super.getHands().get(0).getHandValue();
         int dealerValue = dealerUpCard.getNumericValue();
 
         // Example Basic Strategy logic:

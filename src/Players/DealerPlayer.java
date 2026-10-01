@@ -13,7 +13,7 @@ public class DealerPlayer extends Player {
     @Override
     public Action makeDecision(Card dealerUpCard) {
         // Dealer doesn't need to look at dealerUpCard since it IS the dealer
-        if (getHandValue() < 17) {
+        if (super.getHands().get(0).getHandValue() < 17) {
             return Action.HIT;
         }
         return Action.STAND;

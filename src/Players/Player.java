@@ -6,7 +6,7 @@ import Card.*;
 
 public abstract class Player {
     private String name;
-    private List<Card> hand;
+    private List<Hand> hands;
     private int chips;
     protected int totalBet;
 
@@ -16,53 +16,27 @@ public abstract class Player {
 
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>();
+        this.hands = new ArrayList<>();
         chips=100;
     }
 
-    public void addCard(Card card) {
-        hand.add(card);
+
+
+    public void clearHands() {
+        hands.clear();
     }
 
-    public void clearHand() {
-        hand.clear();
-    }
-
-    public List<Card> getHand() {
-        return hand;
+    public List<Hand> getHands() {
+        return hands;
     }
     //only used in testing
-    public void setHand(List<Card> customHand){
-        hand=customHand;
-    }
+    public void setHands(List<Hand> customHand){
+        hands=customHand;
+   }
 
-    public List<Card> hit(Shoe shoe){
-        addCard(shoe.drawCard());
-        return getHand();
-    }
-
-    public void doubleDown(Shoe shoe){
-        totalBet+= totalBet;
-        hit(shoe);
-    }
 
     public String getName() {
         return name;
-    }
-
-    // Hand valuation logic (handling Aces as 1 or 11)
-    public int getHandValue() {
-        int value = 0;
-        int aces = 0;
-        for (Card card : hand) {
-            value += card.getNumericValue();
-            if (card.isAce()) aces++;
-        }
-        while (value > 21 && aces > 0) {
-            value -= 10;
-            aces--;
-        }
-        return value;
     }
 
     public int getChips(){
@@ -92,21 +66,9 @@ public abstract class Player {
 
         int winAmount = (int) Math.ceil(betAmount*1.5);
         chips+= winAmount;
-        System.out.println("Player " + name + "has blackjack " + " bankroll is now: " +chips);
+        System.out.println("Player " + name + " has blackjack bankroll is now: " +chips);
 
     }
-
-    public boolean isBust() {
-        return getHandValue() > 21;
-    }
-
-    public boolean hasBJ(){
-        if(hand.size()==2 && getHandValue()==21){
-            return true;
-        }
-        return false;
-    }
-
 
     public abstract Action makeDecision(Card dealerUpCard);
 
