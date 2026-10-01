@@ -123,59 +123,7 @@ public class BlackJackSimulator {
     }
 
     private static void playSingleHand(UserPlayer user, Hand hand, Card dealerUpCard, Scanner scanner) {
-//        boolean firstAction = true;
-//
-//
-//        while (true) {
-//            printDealerHand();
-//            System.out.println("Hand: " + hand.getCards() + " | Value: " + hand.getHandValue());
-//
-//            if (hand.isBust()) {
-//                System.out.println("Hand busted!");
-//                break;
-//            }
-//            if (hand.getHandValue() == 21) {
-//                System.out.println("Hand hit 21!");
-//                break;
-//            }
-//
-//            // Options menu
-//            if (firstAction && user.getChips() >= hand.getBet()) {
-//                System.out.print("Choose action: [H]it, [S]tand, or [D]ouble: ");
-//
-//
-//            } else {
-//                System.out.print("Choose action: [H]it or [S]tand: ");
-//            }
-//
-//            String action = scanner.next().toUpperCase();
-//
-//            if (action.startsWith("D") && firstAction && user.getChips() >= hand.getBet()) {
-//                user.bet(hand.getBet());
-//                hand.setBet(hand.getBet() * 2);
-//                hand.addCard(mainShoe.drawCard());
-//                System.out.println("Doubled Down! Hand is now: " + hand.getCards() + " | Value: " + hand.getHandValue());
-//                if (hand.isBust()) {
-//                    System.out.println("Hand busted!");
-//                }
-//                break; // Double down gets exactly 1 card then turn ends
-//            } else if (action.startsWith("H")) {
-//                hand.addCard(mainShoe.drawCard());
-//                firstAction = false;
-//            } else if (action.startsWith("S")) {
-//                break; // Stand
-//            }
-//            else if(action.startsWith("T") && hand.canSplit()){
-//
-//                executeSplit(user, hand);
-//            }
-//            else {
-//                System.out.println("Invalid option. Try again.");
-//            }
-//        }
-
         boolean firstAction = true;
-
         while (true) {
             printDealerHand();
             System.out.println("Hand: " + hand.getCards() + " | Value: " + hand.getHandValue());
