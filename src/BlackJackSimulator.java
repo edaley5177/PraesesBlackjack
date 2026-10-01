@@ -23,19 +23,22 @@ public class BlackJackSimulator {
             return;
         }
 
-        System.out.println("How many bot players do you want?(Max: 30)");
-        int numberOfBots = scanner.nextInt();
-        if (numberOfBots < 0 || numberOfBots > 30) {
-            System.out.println("You must enter an integer between 1 and 30");
-            return;
-        }
-
         int numberOfUsers = 0;
         System.out.println("Would you like to add 1 user player?");
         String user = scanner.next().toUpperCase();
         if (user.startsWith("Y")) {
             numberOfUsers = 1;
         }
+
+        int maxBots = calculateMaxBots(numberOfDecks, numberOfUsers);
+        System.out.println("How many bot players do you want?(Max:" + maxBots+ ")");
+        int numberOfBots = scanner.nextInt();
+        if (numberOfBots < 0 || numberOfBots > maxBots) {
+            System.out.println("You must enter an integer between 1 and " + maxBots);
+            return;
+        }
+
+
 
         mainShoe = new Shoe(numberOfDecks);
         mainShoe.shuffle();
@@ -137,7 +140,7 @@ public class BlackJackSimulator {
                 break;
             }
 
-            // Delegate decision input to the UserPlayer object
+            // Delegate decision input to the UserPlayer
             Action action = user.makeDecision(dealerUpCard);
 
             if (action == Action.DOUBLE) {
@@ -298,5 +301,20 @@ public class BlackJackSimulator {
 
     public static void printDealerHand(){
         System.out.println("Dealers Hand: " + dealerUpCard);
+    }
+
+    public static int calculateMaxBots(int numberOfDecks, int numberOfUsers) {
+        int totalCards = numberOfDecks * 52;
+        int maxDealerCards = 6;
+        int maxCardsPerPlayer = 12; // 2 hands max * 6 cards per hand
+
+        int cardsForBots = totalCards - maxDealerCards - (numberOfUsers * maxCardsPerPlayer);
+
+        if (cardsForBots < maxCardsPerPlayer) {
+            return 0;
+        }
+
+        // Direct division allows as many bots as the deck count can mathematically support
+        return cardsForBots / maxCardsPerPlayer;
     }
 }
