@@ -10,11 +10,18 @@ A command-line, text-based Java application that simulates a game of Blackjack f
 2. **Navigate to the source directory:**
    ```bash
    cd src
-3. javac BlackJackSimulator.java
-4. java BlackJackSimulator
-5. Follow the on-screen prompts to start playing.
+3. Compile the java code
+   ```bash
+   javac BlackJackSimulator.java
+4. Run the java program
+   ```bash
+   java BlackJackSimulator
+   
+ 5. Follow the on-screen prompts to start playing.
 
-Game Overview & Features
+You can also run the main program BlackJackSimulator.java from an IDE of your choice. 
+
+******Game Overview & Features******
 Text-Based Interface: All interaction takes place via standard command-line prompts.
 
 Custom Deck Selection: Choose the number of decks used in the shoe.
@@ -32,6 +39,8 @@ Payouts:
 Standard winning hands payout 1:1 (even money).
 
 Blackjack pays 3:2 (provided the dealer does not also have Blackjack).
+Double down, the human player has an option to double down on their first action of each hand, if they have enough money left in their bankroll. To double down means to double your bet 
+for one more card. 
 
 Splitting Mechanics:
 Allowed only on matching pair cards (e.g., [J, J], but not [J, K]).
